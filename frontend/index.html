@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ChatNow Room - Public Random Chat</title>
+    <meta name="description"
+        content="Join the public chat room instantly! No login required, just pick a username and start chatting.">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="components.css">
+</head>
+
+<body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+        <span class="sun">☀️</span>
+        <span class="moon">🌙</span>
+    </button>
+
+    <!-- Entry Screen -->
+    <div id="entryScreen" class="entry-screen">
+        <div class="entry-container">
+            <div class="entry-header">
+                <div class="logo-wrapper">💬</div>
+                <h1>ChatNow Room</h1>
+                <p>Connect instantly with everyone!</p>
+            </div>
+
+            <div class="entry-card">
+                <div class="input-group">
+                    <label for="usernameInput">Choose your username</label>
+                    <input type="text" id="usernameInput" placeholder="Enter your name..." maxlength="20"
+                        autocomplete="off" autofocus>
+                    <div class="input-hint">
+                        <span>🔓</span> No login required • Max 20 characters
+                    </div>
+                </div>
+
+                <button id="joinBtn" class="join-btn" disabled>
+                    <span>Join Chat Room</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </button>
+
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="icon">🌍</div>
+                        <span>Public</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">⚡</div>
+                        <span>Real-time</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">😊</div>
+                        <span>Emojis</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">🔒</div>
+                        <span>Secure</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="online-preview">
+                <span class="pulse-dot"></span>
+                <span id="previewOnlineCount">0</span> users online
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Screen -->
+    <div id="chatScreen" class="chat-screen hidden">
+        <!-- Header -->
+        <header class="chat-header">
+            <div class="header-left">
+                <div class="logo-mini">💬</div>
+                <div class="header-title">
+                    <h1>ChatNow Room</h1>
+                    <span class="online-badge">
+                        <span class="online-dot"></span>
+                        <span id="onlineCount">0</span> online
+                    </span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="toggleUsersBtn" class="icon-btn" title="Online Users">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                </button>
+                <button id="settingsBtn" class="icon-btn" title="Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main">
+            <div class="messages-container" id="messagesContainer">
+                <div class="welcome-box">
+                    <div class="icon">🎉</div>
+                    <h3>Welcome to ChatNow!</h3>
+                    <p>Start chatting with everyone. Be respectful and have fun!</p>
+                </div>
+                <div id="messagesArea"></div>
+            </div>
+
+            <div id="sidebarOverlay" class="sidebar-overlay"></div>
+            <aside id="usersSidebar" class="users-sidebar hidden">
+                <div class="sidebar-header">
+                    <h3>👥 Online Users</h3>
+                    <button id="closeSidebar" class="close-sidebar">✕</button>
+                </div>
+                <div class="online-count-bar">
+                    <span class="pulse-dot"></span>
+                    <span id="sidebarOnlineCount">0</span> online now
+                </div>
+                <ul id="usersList" class="users-list"></ul>
+            </aside>
+        </div>
+
+        <!-- Typing Indicator - Always visible above input -->
+        <div id="typingIndicator" class="typing-indicator hidden">
+            <div class="typing-dots"><span></span><span></span><span></span></div>
+            <span class="typing-text">Someone is typing...</span>
+        </div>
+
+        <!-- Message Input -->
+        <div class="message-input-area">
+            <div class="input-wrapper">
+                <button id="emojiBtn" class="emoji-btn" title="Emoji">😊</button>
+                <input type="text" id="messageInput" placeholder="Type a message..." maxlength="500" autocomplete="off"
+                    enterkeyhint="send">
+                <button id="sendBtn" class="send-btn" title="Send">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13" />
+                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Emoji Picker -->
+        <div id="emojiPicker" class="emoji-picker hidden">
+            <div class="emoji-grid">
+                <span class="emoji-item">😀</span><span class="emoji-item">😂</span>
+                <span class="emoji-item">🥰</span><span class="emoji-item">😎</span>
+                <span class="emoji-item">🤔</span><span class="emoji-item">😅</span>
+                <span class="emoji-item">😊</span><span class="emoji-item">🙄</span>
+                <span class="emoji-item">😢</span><span class="emoji-item">😡</span>
+                <span class="emoji-item">🥳</span><span class="emoji-item">🤗</span>
+                <span class="emoji-item">👍</span><span class="emoji-item">👎</span>
+                <span class="emoji-item">❤️</span><span class="emoji-item">🔥</span>
+                <span class="emoji-item">✨</span><span class="emoji-item">🎉</span>
+                <span class="emoji-item">💯</span><span class="emoji-item">🙏</span>
+                <span class="emoji-item">👋</span><span class="emoji-item">🤝</span>
+                <span class="emoji-item">💪</span><span class="emoji-item">🤣</span>
+                <span class="emoji-item">😍</span><span class="emoji-item">🥺</span>
+                <span class="emoji-item">😭</span><span class="emoji-item">😈</span>
+                <span class="emoji-item">👀</span><span class="emoji-item">💀</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Settings</h2>
+                <button class="modal-close" id="closeSettings">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>👤 Profile</h3>
+                    <div class="profile-card">
+                        <div class="profile-avatar" id="settingsAvatar">U</div>
+                        <div>
+                            <div style="font-weight:600" id="settingsUsername">Username</div>
+                            <div style="font-size:0.85rem;color:var(--text-muted)">🟢 Online</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>🔔 Notifications</h3>
+                    <div class="settings-toggle-row">
+                        <span>🔊 Sound Effects</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="soundToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-toggle-row">
+                        <span>📱 Push Notifications</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notifyToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>🎨 Appearance</h3>
+                    <div class="settings-toggle-row">
+                        <span>🌙 Dark Mode</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="darkModeToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>💬 Chat Controls</h3>
+                    <button id="clearChatBtn" class="settings-btn">
+                        🗑️ Clear Chat History
+                    </button>
+                </div>
+
+                <div class="settings-section">
+                    <h3>🚫 Blocked Users</h3>
+                    <ul id="blockedUsersList" class="blocked-list">
+                        <li class="no-blocked">No blocked users</li>
+                    </ul>
+                </div>
+
+                <div class="settings-section">
+                    <h3>🚪 Leave</h3>
+                    <button id="leaveRoomBtn" class="settings-btn danger">
+                        Leave Chat Room
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div id="reportModal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h2>⚠️ Report Message</h2>
+                <button class="modal-close" id="closeReport">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="report-info">Why are you reporting this message?</p>
+                <div class="report-options">
+                    <label class="report-option">
+                        <input type="radio" name="reportReason" value="spam">
+                        <span>Spam</span>
+                    </label>
+                    <label class="report-option">
+                        <input type="radio" name="reportReason" value="harassment">
+                        <span>Harassment</span>
+                    </label>
+                    <label class="report-option">
+                        <input type="radio" name="reportReason" value="inappropriate">
+                        <span>Inappropriate Content</span>
+                    </label>
+                    <label class="report-option">
+                        <input type="radio" name="reportReason" value="other">
+                        <span>Other</span>
+                    </label>
+                </div>
+                <button id="submitReportBtn" class="submit-report-btn">Submit Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Connection Status -->
+    <div id="connectionStatus" class="connection-status hidden">
+        <div class="connection-content">
+            <div class="spinner"></div>
+            <span>Reconnecting...</span>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

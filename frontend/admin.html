@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Admin Dashboard - ChatNow Room</title>
+    <meta name="description" content="ChatNow Room Admin Dashboard - Manage users, messages, and moderation.">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+    <!-- Admin Login -->
+    <div id="adminLogin" class="admin-login">
+        <div class="admin-login-container">
+            <div class="admin-login-header">
+                <div class="admin-logo">🛡️</div>
+                <h1>Admin Panel</h1>
+                <p>ChatNow Room Control Center</p>
+            </div>
+            <div class="admin-login-card">
+                <div class="input-group">
+                    <label for="adminPassword">Admin Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter password..." autocomplete="off"
+                        autofocus>
+                </div>
+                <button id="adminLoginBtn" class="join-btn">
+                    <span>Access Dashboard</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </button>
+                <p class="admin-hint">🔒 Authorized personnel only</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard hidden">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-left">
+                <div class="logo-mini admin-icon">🛡️</div>
+                <div class="header-title">
+                    <h1>Admin Dashboard</h1>
+                    <div class="live-badge">
+                        <span id="liveIndicator" class="live-dot"></span>
+                        <span>LIVE</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="refreshStats" class="icon-btn" title="Refresh">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6M1 20v-6h6" />
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                    </svg>
+                </button>
+                <button id="themeToggle" class="icon-btn" title="Theme">
+                    <span class="sun">☀️</span>
+                    <span class="moon">🌙</span>
+                </button>
+                <button id="adminLogout" class="icon-btn logout" title="Logout">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card users">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statOnlineUsers">0</span>
+                    <span class="stat-label">Online Users</span>
+                </div>
+            </div>
+            <div class="stat-card messages">
+                <div class="stat-icon">💬</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statTotalMessages">0</span>
+                    <span class="stat-label">Messages</span>
+                </div>
+            </div>
+            <div class="stat-card reports">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statTotalReports">0</span>
+                    <span class="stat-label">Reports</span>
+                </div>
+            </div>
+            <div class="stat-card status">
+                <div class="stat-icon">🟢</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statServerStatus">Online</span>
+                    <span class="stat-label">Server</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="admin-main">
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="messages">💬 Messages</button>
+                <button class="tab-btn" data-tab="users">👥 Users</button>
+                <button class="tab-btn" data-tab="reports">⚠️ Reports</button>
+                <button class="tab-btn" data-tab="moderation">🛡️ Tools</button>
+            </div>
+
+            <div class="tab-content">
+                <!-- Messages Tab -->
+                <div id="messagesTab" class="tab-panel active">
+                    <div class="panel-header">
+                        <h2>📨 Live Messages</h2>
+                        <div class="panel-actions">
+                            <button id="exportChat" class="btn-secondary" title="Export Chat">📥 Export</button>
+                            <button id="clearAllChat" class="btn-danger">🗑️ Clear All</button>
+                        </div>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" id="searchMessages" placeholder="🔍 Search messages...">
+                    </div>
+                    <div class="messages-list" id="adminMessagesList">
+                        <div class="empty-state">
+                            <span class="empty-icon">💬</span>
+                            <p>No messages yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Tab -->
+                <div id="usersTab" class="tab-panel">
+                    <div class="panel-header">
+                        <h2>🟢 Online Users</h2>
+                        <span class="user-count-badge"><span id="adminUserCount">0</span> online</span>
+                    </div>
+                    <div class="users-grid" id="adminUsersList">
+                        <div class="empty-state">
+                            <span class="empty-icon">👥</span>
+                            <p>No users online</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Tab -->
+                <div id="reportsTab" class="tab-panel">
+                    <div class="panel-header">
+                        <h2>🚨 User Reports</h2>
+                        <button id="clearAllReports" class="btn-secondary">✓ Clear All</button>
+                    </div>
+                    <div class="reports-list" id="adminReportsList">
+                        <div class="empty-state">
+                            <span class="empty-icon">✅</span>
+                            <p>No pending reports</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Moderation Tab -->
+                <div id="moderationTab" class="tab-panel">
+                    <div class="panel-header">
+                        <h2>⚙️ Moderation Tools</h2>
+                    </div>
+                    <div class="mod-tools">
+                        <div class="mod-card">
+                            <h4>👢 Kick User</h4>
+                            <p>Remove a user from the chat room</p>
+                            <div class="mod-input-row">
+                                <input type="text" id="kickUsername" placeholder="Username to kick">
+                                <button id="kickUserBtn" class="btn-warning">Kick</button>
+                            </div>
+                        </div>
+                        <div class="mod-card">
+                            <h4>🔇 Mute User</h4>
+                            <p>Temporarily prevent user from sending messages</p>
+                            <div class="mod-input-row">
+                                <input type="text" id="muteUsername" placeholder="Username">
+                                <input type="number" id="muteDuration" placeholder="Seconds" value="60" min="10"
+                                    max="3600">
+                                <button id="muteUserBtn" class="btn-warning">Mute</button>
+                            </div>
+                        </div>
+                        <div class="mod-card danger-card">
+                            <h4>🚫 Ban User</h4>
+                            <p>Permanently ban user by IP address</p>
+                            <div class="mod-input-row">
+                                <input type="text" id="banUsername" placeholder="Username to ban">
+                                <button id="banUserBtn" class="btn-danger">Ban IP</button>
+                            </div>
+                        </div>
+                        <div class="mod-card">
+                            <h4>📢 Broadcast Message</h4>
+                            <p>Send announcement to all users</p>
+                            <div class="mod-input-row">
+                                <input type="text" id="broadcastMsg" placeholder="Type announcement...">
+                                <button id="broadcastBtn" class="btn-secondary">📢 Send</button>
+                            </div>
+                        </div>
+                        <div class="mod-card info-card">
+                            <h4>📋 Quick Actions Guide</h4>
+                            <p>Use buttons on user cards for quick actions</p>
+                            <div class="quick-tips">
+                                <span>👢 = Kick User</span>
+                                <span>🔇 = Mute 60s</span>
+                                <span>🗑️ = Delete Message</span>
+                                <span>🚫 = Ban IP</span>
+                                <span>📢 = Broadcast</span>
+                            </div>
+                        </div>
+                        <div class="mod-card filter-card">
+                            <h4>🛡️ Auto-Moderation</h4>
+                            <p>Active security features</p>
+                            <div class="filter-status">
+                                <span class="status-dot active"></span>
+                                <span>Bad words filter</span>
+                            </div>
+                            <div class="filter-status">
+                                <span class="status-dot active"></span>
+                                <span>Rate limiting (5 msg/5s)</span>
+                            </div>
+                            <div class="filter-status">
+                                <span class="status-dot active"></span>
+                                <span>XSS protection</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="config.js"></script>
+    <script src="admin.js"></script>
+</body>
+
+</html>
