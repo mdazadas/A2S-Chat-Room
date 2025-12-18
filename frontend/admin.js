@@ -1,10 +1,6 @@
 // Admin Dashboard - Clean Professional Version
-// SOCKET_URL is set by config.js, fallback for local dev
-const SOCKET_URL = window.SOCKET_URL || (
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-        ? `http://${window.location.hostname}:3001`
-        : window.location.origin
-);
+// SOCKET_URL is set by config.js
+const SOCKET_URL = window.SOCKET_URL;
 
 // State
 const adminState = {

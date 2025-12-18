@@ -17,61 +17,79 @@
 </head>
 
 <body>
-    <!-- Theme Toggle -->
-    <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
-        <span class="sun">☀️</span>
-        <span class="moon">🌙</span>
-    </button>
-
     <!-- Entry Screen -->
     <div id="entryScreen" class="entry-screen">
+        <!-- Theme Toggle -->
+        <button class="theme-btn" id="entryThemeToggle" title="Toggle Theme">
+            <span class="theme-icon sun">☀️</span>
+            <span class="theme-icon moon">🌙</span>
+        </button>
+
+        <!-- Animated Background -->
+        <div class="bg-gradient"></div>
+        <div class="bg-circles">
+            <div class="circle c1"></div>
+            <div class="circle c2"></div>
+            <div class="circle c3"></div>
+        </div>
+
         <div class="entry-container">
+            <!-- Logo & Title -->
             <div class="entry-header">
-                <div class="logo-wrapper">💬</div>
-                <h1>ChatNow Room</h1>
-                <p>Connect instantly with everyone!</p>
+                <div class="logo-glow">
+                    <div class="logo-icon">💬</div>
+                </div>
+                <h1 class="app-name">ChatNow<span>Room</span></h1>
+                <p class="tagline">Real-time conversations with anyone, anywhere</p>
             </div>
 
-            <div class="entry-card">
+            <!-- Main Card -->
+            <div class="entry-card glass">
                 <div class="input-group">
-                    <label for="usernameInput">Choose your username</label>
-                    <input type="text" id="usernameInput" placeholder="Enter your name..." maxlength="20"
-                        autocomplete="off" autofocus>
+                    <label for="usernameInput">Your Display Name</label>
+                    <div class="input-field">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="usernameInput" placeholder="Enter a cool name..." maxlength="20"
+                            autocomplete="off" autofocus>
+                    </div>
                     <div class="input-hint">
-                        <span>🔓</span> No login required • Max 20 characters
+                        <span>✨</span> No signup needed • Just pick a name & join!
                     </div>
                 </div>
 
-                <button id="joinBtn" class="join-btn" disabled>
-                    <span>Join Chat Room</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button id="joinBtn" class="join-btn glow" disabled>
+                    <span>Start Chatting</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
                         <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                 </button>
 
-                <div class="features-list">
-                    <div class="feature-item">
-                        <div class="icon">🌍</div>
-                        <span>Public</span>
+                <!-- Features -->
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">🌍</span>
+                        <span class="feature-text">Public Room</span>
                     </div>
-                    <div class="feature-item">
-                        <div class="icon">⚡</div>
-                        <span>Real-time</span>
+                    <div class="feature-card">
+                        <span class="feature-icon">⚡</span>
+                        <span class="feature-text">Instant</span>
                     </div>
-                    <div class="feature-item">
-                        <div class="icon">😊</div>
-                        <span>Emojis</span>
+                    <div class="feature-card">
+                        <span class="feature-icon">🔒</span>
+                        <span class="feature-text">Secure</span>
                     </div>
-                    <div class="feature-item">
-                        <div class="icon">🔒</div>
-                        <span>Secure</span>
+                    <div class="feature-card">
+                        <span class="feature-icon">📱</span>
+                        <span class="feature-text">Mobile</span>
                     </div>
                 </div>
             </div>
 
-            <div class="online-preview">
-                <span class="pulse-dot"></span>
-                <span id="previewOnlineCount">0</span> users online
+            <!-- Online Status -->
+            <div class="online-status">
+                <div class="status-dot"></div>
+                <span><strong id="previewOnlineCount">0</strong> people chatting now</span>
             </div>
         </div>
     </div>
@@ -154,24 +172,47 @@
             </div>
         </div>
 
-        <!-- Emoji Picker -->
+        <!-- Emoji Picker - Expanded -->
         <div id="emojiPicker" class="emoji-picker hidden">
-            <div class="emoji-grid">
-                <span class="emoji-item">😀</span><span class="emoji-item">😂</span>
-                <span class="emoji-item">🥰</span><span class="emoji-item">😎</span>
-                <span class="emoji-item">🤔</span><span class="emoji-item">😅</span>
-                <span class="emoji-item">😊</span><span class="emoji-item">🙄</span>
-                <span class="emoji-item">😢</span><span class="emoji-item">😡</span>
-                <span class="emoji-item">🥳</span><span class="emoji-item">🤗</span>
+            <div class="emoji-tabs">
+                <span class="emoji-tab active" data-cat="smileys">😀</span>
+                <span class="emoji-tab" data-cat="gestures">👍</span>
+                <span class="emoji-tab" data-cat="hearts">❤️</span>
+                <span class="emoji-tab" data-cat="objects">🎉</span>
+            </div>
+            <div class="emoji-grid" id="emojiGrid">
+                <!-- Smileys -->
+                <span class="emoji-item">😀</span><span class="emoji-item">😃</span>
+                <span class="emoji-item">😄</span><span class="emoji-item">😁</span>
+                <span class="emoji-item">😂</span><span class="emoji-item">🤣</span>
+                <span class="emoji-item">😊</span><span class="emoji-item">😇</span>
+                <span class="emoji-item">🥰</span><span class="emoji-item">😍</span>
+                <span class="emoji-item">🤩</span><span class="emoji-item">😘</span>
+                <span class="emoji-item">😎</span><span class="emoji-item">🤔</span>
+                <span class="emoji-item">🙄</span><span class="emoji-item">😏</span>
+                <span class="emoji-item">😢</span><span class="emoji-item">😭</span>
+                <span class="emoji-item">😱</span><span class="emoji-item">😡</span>
+                <span class="emoji-item">🥺</span><span class="emoji-item">😴</span>
+                <span class="emoji-item">🤮</span><span class="emoji-item">🤯</span>
+                <!-- Gestures -->
                 <span class="emoji-item">👍</span><span class="emoji-item">👎</span>
-                <span class="emoji-item">❤️</span><span class="emoji-item">🔥</span>
-                <span class="emoji-item">✨</span><span class="emoji-item">🎉</span>
-                <span class="emoji-item">💯</span><span class="emoji-item">🙏</span>
                 <span class="emoji-item">👋</span><span class="emoji-item">🤝</span>
-                <span class="emoji-item">💪</span><span class="emoji-item">🤣</span>
-                <span class="emoji-item">😍</span><span class="emoji-item">🥺</span>
-                <span class="emoji-item">😭</span><span class="emoji-item">😈</span>
-                <span class="emoji-item">👀</span><span class="emoji-item">💀</span>
+                <span class="emoji-item">👏</span><span class="emoji-item">🙏</span>
+                <span class="emoji-item">💪</span><span class="emoji-item">✌️</span>
+                <span class="emoji-item">🤞</span><span class="emoji-item">🤟</span>
+                <span class="emoji-item">👀</span><span class="emoji-item">👁️</span>
+                <!-- Hearts -->
+                <span class="emoji-item">❤️</span><span class="emoji-item">🧡</span>
+                <span class="emoji-item">💛</span><span class="emoji-item">💚</span>
+                <span class="emoji-item">💙</span><span class="emoji-item">💜</span>
+                <span class="emoji-item">🖤</span><span class="emoji-item">💔</span>
+                <!-- Objects -->
+                <span class="emoji-item">🔥</span><span class="emoji-item">✨</span>
+                <span class="emoji-item">⭐</span><span class="emoji-item">🌟</span>
+                <span class="emoji-item">💯</span><span class="emoji-item">🎉</span>
+                <span class="emoji-item">🎊</span><span class="emoji-item">🎁</span>
+                <span class="emoji-item">💀</span><span class="emoji-item">👻</span>
+                <span class="emoji-item">🚀</span><span class="emoji-item">💡</span>
             </div>
         </div>
     </div>

@@ -1,20 +1,11 @@
 // ChatNow Room - Configuration
-// Update BACKEND_URL after deploying backend to Render
+// Backend on Render
 
 const CONFIG = {
-    // Replace with your Render backend URL after deployment
-    // Example: 'https://chatnow-room-backend.onrender.com'
-    BACKEND_URL: 'https://YOUR-RENDER-APP.onrender.com',
-
-    // Keep this for local development
-    LOCAL_URL: 'http://localhost:3001'
+    BACKEND_URL: 'https://a2s-chat-room.onrender.com'
 };
 
-// Auto-detect environment
-const isLocalhost = window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1';
-
-// Export the socket URL
-window.SOCKET_URL = isLocalhost ? CONFIG.LOCAL_URL : CONFIG.BACKEND_URL;
+// Always use Render backend
+window.SOCKET_URL = CONFIG.BACKEND_URL;
 
 console.log('🔌 Socket URL:', window.SOCKET_URL);

@@ -1,10 +1,6 @@
 // ChatNow Room - Professional Mobile-First Chat App
-// SOCKET_URL is set by config.js, fallback for local dev
-const SOCKET_URL = window.SOCKET_URL || (
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-        ? `http://${window.location.hostname}:3001`
-        : window.location.origin
-);
+// SOCKET_URL is set by config.js
+const SOCKET_URL = window.SOCKET_URL;
 
 // App State
 const state = {
@@ -25,6 +21,7 @@ const elements = {
     usernameInput: document.getElementById('usernameInput'),
     joinBtn: document.getElementById('joinBtn'),
     previewOnlineCount: document.getElementById('previewOnlineCount'),
+    entryThemeToggle: document.getElementById('entryThemeToggle'),
     chatScreen: document.getElementById('chatScreen'),
     messagesArea: document.getElementById('messagesArea'),
     messagesContainer: document.getElementById('messagesContainer'),
@@ -69,31 +66,67 @@ function init() {
     setupMobileKeyboard();
 }
 
-// Handle mobile keyboard resize
+// Handle mobile keyboard - WhatsApp style
 function setupMobileKeyboard() {
-    // Use visualViewport API for better keyboard handling
+    const chatScreen = document.getElementById('chatScreen');
+    const inputArea = document.querySelector('.message-input-area');
+
     if (window.visualViewport) {
+        // When viewport resizes (keyboard opens/closes)
         window.visualViewport.addEventListener('resize', () => {
-            // Scroll to bottom when keyboard opens
-            if (elements.messagesContainer) {
-                requestAnimationFrame(() => {
-                    elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
-                });
+            const keyboardHeight = window.innerHeight - window.visualViewport.height;
+
+            if (keyboardHeight > 100) {
+                // Keyboard is open - adjust input position
+                document.body.style.height = `${window.visualViewport.height}px`;
+                if (inputArea) {
+                    inputArea.style.paddingBottom = '10px';
+                }
+                // Scroll to bottom
+                setTimeout(() => {
+                    elements.messagesContainer?.scrollTo({
+                        top: elements.messagesContainer.scrollHeight,
+                        behavior: 'auto'
+                    });
+                }, 50);
+            } else {
+                // Keyboard closed
+                document.body.style.height = '100dvh';
+                if (inputArea) {
+                    inputArea.style.paddingBottom = 'calc(10px + env(safe-area-inset-bottom, 0px))';
+                }
             }
+        });
+
+        window.visualViewport.addEventListener('scroll', () => {
+            window.scrollTo(0, 0);
         });
     }
 
-    // Focus input scroll fix
+    // Prevent page scroll on focus
     if (elements.messageInput) {
         elements.messageInput.addEventListener('focus', () => {
             setTimeout(() => {
+                window.scrollTo(0, 0);
                 elements.messagesContainer?.scrollTo({
                     top: elements.messagesContainer.scrollHeight,
                     behavior: 'smooth'
                 });
             }, 300);
         });
+
+        elements.messageInput.addEventListener('blur', () => {
+            window.scrollTo(0, 0);
+        });
     }
+
+    // Prevent body scroll
+    document.body.addEventListener('touchmove', (e) => {
+        if (!elements.messagesContainer?.contains(e.target) &&
+            !elements.usersSidebar?.contains(e.target)) {
+            // Allow only message container scroll
+        }
+    }, { passive: true });
 }
 
 function initTheme() {
@@ -126,6 +159,11 @@ function setupEventListeners() {
     // Theme toggle
     if (elements.themeToggle) {
         elements.themeToggle.addEventListener('click', toggleTheme);
+    }
+
+    // Entry screen theme toggle
+    if (elements.entryThemeToggle) {
+        elements.entryThemeToggle.addEventListener('click', toggleTheme);
     }
 
     // Username input
@@ -350,6 +388,12 @@ function sendMessage() {
     state.socket.emit('message', { message });
     elements.messageInput.value = '';
     state.socket.emit('typing', { isTyping: false });
+
+    // Keep input focused to prevent keyboard closing
+    setTimeout(() => {
+        elements.messageInput.focus();
+        scrollToBottom();
+    }, 50);
 }
 
 function handleNewMessage(data) {
@@ -386,22 +430,30 @@ function appendMessage(data, animate = true) {
     messageEl.className = `message ${isOwn ? 'own' : ''}`;
     messageEl.dataset.id = data.id;
 
-    messageEl.innerHTML = `
-        <div class="msg-avatar">${data.username.charAt(0).toUpperCase()}</div>
-        <div class="msg-content">
-            <div class="msg-header">
-                <span class="msg-username">${escapeHtml(data.username)}</span>
-                <span class="msg-time">${time}</span>
+    if (isOwn) {
+        // Own message - simple bubble, no avatar/username
+        messageEl.innerHTML = `
+            <div class="msg-content">
+                <div class="msg-text">${formatMessage(data.message)}</div>
+                <div class="msg-meta">
+                    <span class="msg-time">${time}</span>
+                    <span class="msg-status">✓✓</span>
+                </div>
             </div>
-            <div class="msg-text">${formatMessage(data.message)}</div>
-            ${isOwn ? '<div class="msg-status">✓✓</div>' : ''}
-        </div>
-        ${!isOwn ? `
-        <div class="msg-actions">
-            <button class="action-btn" onclick="reportMessage('${data.id}')" title="Report">⚠️</button>
-        </div>
-        ` : ''}
-    `;
+        `;
+    } else {
+        // Other's message - show avatar and username
+        messageEl.innerHTML = `
+            <div class="msg-avatar">${data.username.charAt(0).toUpperCase()}</div>
+            <div class="msg-content">
+                <div class="msg-header">
+                    <span class="msg-username">${escapeHtml(data.username)}</span>
+                    <span class="msg-time">${time}</span>
+                </div>
+                <div class="msg-text">${formatMessage(data.message)}</div>
+            </div>
+        `;
+    }
 
     if (!animate) messageEl.style.animation = 'none';
     elements.messagesArea.appendChild(messageEl);
